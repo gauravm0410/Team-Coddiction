@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Climbing Challenge</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="main-screen">
+    <h1>AI Climbing Challenge</h1>
+    <button id="start-btn">Start Game</button>
+    <button id="view-leaderboard-btn">View Leaderboard</button>
+  </div>
+
+  <div id="game-container" style="display: none;">
+    <div id="obstacle-box">Obstacle: <span id="obstacle-text">...</span></div>
+    <div id="game-area">
+      <div id="background"></div>
+      <div id="character"></div>
+      <div id="steps"></div>
+    </div>
+    <div id="game-controls">
+      <input type="text" id="response-input" placeholder="Enter counteraction" autofocus />
+      <button id="submit-response">Submit</button>
+      <div id="timer">Time: <span id="time-left">10</span> sec</div>
+      <div id="lives">Lives: <span id="lives-count">3</span></div>
+    </div>
+    <div id="feedback"></div>
+    <div id="leaderboard" style="display: none;">
+      <h3>Leaderboard</h3>
+      <div id="highest-score">Highest Score: <span id="highest-score-value">0</span></div>
+      <ul id="leaderboard-list"></ul>
+      <button id="back-btn">Back</button>
+    </div>
+    <button id="retry-btn" style="display: none;">Retry</button>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
