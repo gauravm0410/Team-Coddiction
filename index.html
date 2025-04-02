@@ -1,40 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Climbing Challenge</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Powered Climbing V2</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div id="main-screen">
-    <h1>AI Climbing Challenge</h1>
-    <button id="start-btn">Start Game</button>
-    <button id="view-leaderboard-btn">View Leaderboard</button>
-  </div>
+    <div id="start-game-overlay" class="overlay">
+        <div class="overlay-content">
+            <h1 class="start-title">AI Powered Climbing V2</h1>
+            <p class="instructions">
+                Welcome, climber! An obstacle word will appear.
+                Type a word to overcome it before the timer runs out.
+                The AI will judge if your response works!
+                Correct answers help you climb higher. Mistakes cost a life.
+                Good luck reaching the summit!
+            </p>
+            <button id="start-game-button">Start Climbing!</button>
+        </div>
+    </div>
 
-  <div id="game-container" style="display: none;">
-    <div id="obstacle-box">Obstacle: <span id="obstacle-text">...</span></div>
-    <div id="game-area">
-      <div id="background"></div>
-      <div id="character"></div>
-      <div id="steps"></div>
+    <div class="game-container">
+        <h1>AI Powered Climbing V2</h1>
+
+        <div id="obstacle-display" class="obstacle-box">
+             Obstacle: <span id="obstacle-word">Loading...</span>
+        </div>
+
+        <div id="game-area">
+             <div id="character" style="--current-y: 0px;">🧗</div>
+        </div>
+
+        <form id="response-form" class="input-section">
+             <input type="text" id="response-input" placeholder="Enter counteraction..." autocomplete="off" required>
+             <button type="submit" id="submit-button">Submit</button>
+             <button type="button" id="skip-button">Skip (-1❤)</button>
+        </form>
+
+        <div class="status">
+             <p id="timer">Time: <span>20</span></p>
+             <p id="score">Score: <span>0</span></p>
+             <p id="lives">Lives: <span>❤❤❤</span></p>
+        </div>
+
+        <p id="feedback" class="feedback-message"></p>
+        <p id="explanation" class="explanation-message"></p>
+
+        <button type="button" id="next-button" class="hidden">Next Obstacle</button>
+
+        <div id="game-over-overlay" class="overlay hidden">
+             <div class="overlay-content">
+                  <h2>Game Over!</h2>
+                  <p>Final Score: <span id="final-score">0</span></p>
+                  <button id="retry-button">Play Again</button>
+             </div>
+        </div>
     </div>
-    <div id="game-controls">
-      <input type="text" id="response-input" placeholder="Enter counteraction" autofocus />
-      <button id="submit-response">Submit</button>
-      <div id="timer">Time: <span id="time-left">10</span> sec</div>
-      <div id="lives">Lives: <span id="lives-count">3</span></div>
-    </div>
-    <div id="feedback"></div>
-    <div id="leaderboard" style="display: none;">
-      <h3>Leaderboard</h3>
-      <div id="highest-score">Highest Score: <span id="highest-score-value">0</span></div>
-      <ul id="leaderboard-list"></ul>
-      <button id="back-btn">Back</button>
-    </div>
-    <button id="retry-btn" style="display: none;">Retry</button>
-  </div>
-  <script src="script.js"></script>
+
+    <audio id="correct-sound-1" src="sounds/correct1.mp3" preload="auto"></audio>
+    <audio id="correct-sound-2" src="sounds/correct2.mp3" preload="auto"></audio>
+    <audio id="correct-sound-3" src="sounds/correct3.mp3" preload="auto"></audio>
+    <audio id="correct-sound-streak" src="sounds/correct_streak.mp3" preload="auto"></audio>
+    <audio id="wrong-sound-1" src="sounds/wrong1.mp3" preload="auto"></audio>
+    <audio id="wrong-sound-2" src="sounds/wrong2.mp3" preload="auto"></audio>
+    <audio id="timeout-sound" src="sounds/timeout.mp3" preload="auto"></audio>
+    <audio id="skip-sound" src="sounds/skip.mp3" preload="auto"></audio>
+    <audio id="game-over-sound" src="sounds/gameover.mp3" preload="auto"></audio>
+
+    <script src="script.js"></script>
 </body>
 </html>

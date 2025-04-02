@@ -1,49 +1,375 @@
+/* General Styles */
+:root {
+    --step-height: 40px; /* Define step height as CSS variable */
+    --animation-speed: 0.5s; /* Control animation speed */
+    --primary-color: #00796b; /* Teal */
+    --secondary-color: #4caf50; /* Green */
+    --accent-color: #ffc107; /* Amber */
+    --skip-color: #ff9800; /* Orange for Skip */
+    --next-color: #2196F3; /* Blue for Next */
+    --bg-light: #e0f7fa; /* Light cyan */
+    --bg-dark: #f0f4f8;
+    --text-color: #333;
+    --feedback-correct: #2e7d32; /* Dark Green */
+    --feedback-incorrect: #d32f2f; /* Dark Red */
+    --explanation-color: #555; /* Color for explanation text */
+}
+
 body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  background: #2c3e50;
-  color: white;
-  margin: 0;
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    /* Animated Gradient Background */
+    background: linear-gradient(135deg, #a1c4fd, #c2e9fb, #e0f7fa, #a1c4fd);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
 }
-button {
-  padding: 15px 30px;
-  font-size: 20px;
-  background-color: #ff5722;
-  border: none;
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
-  margin: 10px;
-  transition: background-color 0.3s;
+
+/* Background Animation */
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
-button:hover {
-  background-color: #e64a19;
+
+h1 {
+    font-size: 2em;
+    color: var(--primary-color);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+    font-weight: 700;
 }
+
+/* Game Container */
+.game-container {
+    background-color: #fff;
+    padding: 20px 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    width: 90%;
+    max-width: 450px;
+    text-align: center;
+    border: 1px solid #ddd;
+    position: relative; /* Needed for absolute positioning context if required */
+}
+
+/* Obstacle Display */
+.obstacle-box { /* Renamed class for animation hook */
+    margin-bottom: 15px;
+    padding: 12px 20px;
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 600;
+    display: inline-block;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Animation for new obstacle */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+/* Animation state for obstacle */
+.obstacle-box.new-obstacle {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+#obstacle-word {
+    font-style: italic;
+}
+
+/* Main Game Area */
 #game-area {
-  position: relative;
-  width: 300px;
-  height: 500px;
-  background: #34495e;
-  margin: 20px auto;
-  overflow: hidden;
-  border-radius: 10px;
+    position: relative;
+    width: 100%;
+    height: 350px;
+    background-color: var(--bg-light);
+    border-radius: 12px;
+    border: 3px solid var(--primary-color);
+    margin: 15px 0;
+    overflow: hidden;
+    background-image: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent calc(var(--step-height) - 2px),
+        rgba(0, 121, 107, 0.3) calc(var(--step-height) - 2px),
+        rgba(0, 121, 107, 0.3) var(--step-height)
+    );
 }
+
+/* Character Styling & Positioning */
 #character {
-  position: absolute;
-  bottom: 10px;
-  left: 130px;
-  width: 40px;
-  height: 40px;
-  background: yellow;
-  border-radius: 50%;
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%) translateY(var(--current-y));
+    font-size: 2.8em;
+    color: var(--primary-color);
+    will-change: transform;
+    transition: transform var(--animation-speed) cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10;
 }
-#feedback {
-  font-size: 20px;
-  margin-top: 20px;
+
+/* Character Feedback Pseudo-Element */
+#character::after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.6em;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    z-index: 11;
 }
-.correct {
-  color: #27ae60;
+
+/* Correct Feedback State */
+#character.correct-feedback::after {
+    content: '👍';
+    opacity: 1;
+    transform: translateX(-50%) scale(1.2);
 }
-.incorrect {
-  color: red;
+
+/* Incorrect Feedback State */
+#character.incorrect-feedback::after {
+    content: '🤕';
+    opacity: 1;
+    transform: translateX(-50%) scale(1.2);
+}
+
+
+/* Input and Button Section */
+.input-section {
+    margin-top: 20px;
+    display: flex;
+    gap: 8px; /* Slightly reduced gap */
+    flex-wrap: wrap; /* Allow wrapping */
+    align-items: center; /* Align items vertically */
+    justify-content: center; /* Center items if they wrap */
+}
+
+#response-input {
+    padding: 12px 15px;
+    font-size: 1em;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    flex-grow: 1; /* Take available space */
+    min-width: 150px; /* Minimum width before wrapping */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#response-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px rgba(0, 121, 107, 0.3);
+}
+
+/* Common Button Styles */
+#submit-button,
+#skip-button,
+#retry-button,
+#next-button,
+#start-game-button {
+    color: #fff;
+    padding: 12px 20px; /* Unified padding */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    flex-shrink: 0; /* Prevent shrinking */
+    margin-top: 5px; /* Add some top margin for wrapped buttons */
+}
+
+#submit-button:active,
+#skip-button:active,
+#retry-button:active,
+#next-button:active,
+#start-game-button:active {
+    transform: scale(0.98);
+}
+
+#submit-button:disabled,
+#skip-button:disabled,
+#next-button:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+    transform: scale(1); /* Prevent scale effect when disabled */
+}
+
+/* Specific Button Styles */
+#submit-button { background-color: var(--secondary-color); }
+#submit-button:hover:not(:disabled) { background-color: #388e3c; }
+
+#skip-button { background-color: var(--skip-color); }
+#skip-button:hover:not(:disabled) { background-color: #f57c00; /* Darker orange on hover */ }
+
+#next-button {
+    background-color: var(--next-color);
+    margin-top: 15px; /* Give it more space after feedback */
+}
+#next-button:hover:not(:disabled) { background-color: #1976D2; /* Darker blue */ }
+
+#retry-button,
+#start-game-button {
+    background-color: var(--secondary-color);
+    padding: 12px 30px; /* Keep retry/start buttons slightly larger */
+    font-size: 1.1em;
+    margin-top: 15px; /* More margin for overlay buttons */
+}
+#retry-button:hover,
+#start-game-button:hover { background-color: #388e3c; }
+
+
+/* Status Section */
+.status {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0 10px 0;
+    font-size: 1em;
+    font-weight: 600;
+    color: var(--primary-color);
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.status p {
+    margin: 5px;
+    background-color: rgba(0, 121, 107, 0.1);
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+.status span {
+    font-weight: 700;
+    color: var(--text-color);
+}
+#lives span {
+    font-size: 1.2em;
+    vertical-align: middle;
+}
+
+/* Feedback & Explanation Message Styling */
+.feedback-message,
+.explanation-message {
+    min-height: 1.2em; /* Reserve space */
+    margin-top: 5px; /* Reduced margin */
+    font-weight: 600;
+    font-size: 0.9em;
+    opacity: 0; /* Hidden initially for animation */
+    transform: translateY(10px); /* Start slightly lower */
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out, color 0.3s ease;
+}
+
+/* Make messages visible when they have content */
+.feedback-message.visible,
+.explanation-message.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Color for correct feedback */
+.feedback-message.correct { color: var(--feedback-correct); }
+/* Color for incorrect feedback */
+.feedback-message.incorrect { color: var(--feedback-incorrect); }
+
+/* Styling for explanation */
+.explanation-message {
+    color: var(--explanation-color);
+    font-size: 0.85em; /* Slightly smaller */
+    font-style: italic;
+    min-height: 1em; /* Adjust min-height */
+    margin-bottom: 10px; /* Add margin below explanation */
+    /* Added word-wrap for potentially long explanations */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+
+/* Animations (Jump and Fall - unchanged) */
+@keyframes jump-up-animation {
+    0% { transform: translateX(-50%) translateY(var(--current-y)); }
+    50% { transform: translateX(-50%) translateY(calc(var(--target-y) - 20px)); }
+    100% { transform: translateX(-50%) translateY(var(--target-y)); }
+}
+#character.is-jumping {
+    animation: jump-up-animation var(--animation-speed) ease-out forwards;
+}
+
+@keyframes fall-down-animation {
+    0% { transform: translateX(-50%) translateY(var(--current-y)) rotate(0deg); opacity: 1; }
+    100% { transform: translateX(-50%) translateY(0px) rotate(30deg); opacity: 0.8; }
+}
+#character.is-falling {
+    animation: fall-down-animation var(--animation-speed) ease-in forwards;
+}
+
+
+/* Overlay Styling (Common for Start and Game Over) */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.75); /* Slightly darker */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.4s ease-in-out;
+}
+
+.overlay.hidden {
+    opacity: 0;
+    pointer-events: none; /* Prevent interaction when hidden */
+}
+
+.overlay-content {
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transform: scale(1);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    max-width: 500px; /* Limit width */
+    width: 90%;
+}
+
+.overlay.hidden .overlay-content {
+    transform: scale(0.7);
+}
+
+.overlay-content h1.start-title { /* Specific style for start screen title */
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-size: 2.2em;
+}
+
+.overlay-content h2 { /* Game Over title */
+    color: var(--feedback-incorrect);
+    margin-bottom: 15px;
+}
+
+.overlay-content p {
+    margin-bottom: 25px;
+    font-size: 1.1em;
+    line-height: 1.6; /* Improve readability */
+}
+.overlay-content p.instructions {
+    color: #555;
+    font-size: 1em;
+}
+
+
+/* Utility class */
+.hidden {
+    display: none !important; /* Use important to ensure override if needed */
 }
